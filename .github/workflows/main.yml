@@ -21,4 +21,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://YashPatilGenAI:$HF_TOKEN@huggingface.co/spaces/YashPatilGenAI/GenAIApp main
+        run: git push --force https://YashPatilGenAI:$HF_TOKEN@huggingface.co/spaces/YashPatilGenAI/LearnAgenticAI main
