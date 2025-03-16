@@ -46,6 +46,6 @@ class DisplayResultStreamlit:
 
 
             with st.chat_message("user"):
-                st.title(f"{result["title"].content}")
-                st.write(f"{result["content"].content}")
+                st.title(f"{result['title'].content}")
+                st.write(f"{result['content'].content}")
              
