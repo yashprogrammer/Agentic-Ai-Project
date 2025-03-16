@@ -64,6 +64,14 @@ class LoadStreamlitUI:
                 if not self.user_controls["TAVILY_API_KEY"]:
                     st.warning("⚠️ Please enter your TAVILY_API_KEY key to proceed. Don't have? refer : https://app.tavily.com/home")
             
+            if self.user_controls["selected_usecase"] == "Blog from YT VIdeo":
+                st.sidebar.header("YouTube Video Input")
+                yt_link = st.sidebar.text_input("Enter YouTube Video Link:")
+                # Store the link in session state and user_controls
+                st.session_state["YT_link"] = yt_link
+                self.user_controls["YT_link"] = yt_link
+
+
             if "state" not in st.session_state:
                 st.session_state.state = self.initialize_session()
             

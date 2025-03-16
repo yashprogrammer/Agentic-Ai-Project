@@ -2,18 +2,26 @@ from langgraph.graph import StateGraph, START,END, MessagesState
 from langgraph.prebuilt import tools_condition,ToolNode
 from langchain_core.prompts import ChatPromptTemplate
 from src.langgraphagenticai.state.state import State
+from src.langgraphagenticai.state.blog_state import BlogState
 from src.langgraphagenticai.nodes.basic_chatbot_node import BasicChatbotNode
 from src.langgraphagenticai.nodes.chatbot_with_Tool_node import ChatbotWithToolNode
+from src.langgraphagenticai.nodes.blog_from_YT_node import BlogFromYTNode
 from src.langgraphagenticai.tools.serach_tool import get_tools,create_tool_node
+import logging
+
 
 
 
 
 class GraphBuilder:
 
-    def __init__(self,model):
+    def __init__(self,model,usecase):
         self.llm=model
-        self.graph_builder=StateGraph(State)
+        if usecase == "Blog from YT VIdeo":
+            self.graph_builder=StateGraph(BlogState)
+        else:
+            self.graph_builder=StateGraph(State)
+        self.yt_link = ""
 
     def basic_chatbot_build_graph(self):
         """
@@ -58,17 +66,40 @@ class GraphBuilder:
         self.graph_builder.add_edge("tools","chatbot")
 
     
+    def blog_from_YT_build_graph(self):
+        """
+        Builds a blog from YouTube graph using LangGraph.
+        """
+
+        blog_from_yt_node = BlogFromYTNode(self.llm, self.yt_link)
+
+        self.graph_builder.add_node("transcript_generator", blog_from_yt_node.transcript_generator)
+        self.graph_builder.add_node("title_creator", blog_from_yt_node.title_creator)
+        self.graph_builder.add_node("content_creator", blog_from_yt_node.content_creator)
+        self.graph_builder.add_edge(START, "transcript_generator")
+        self.graph_builder.add_edge("transcript_generator", "title_creator")
+        self.graph_builder.add_edge("title_creator", "content_creator")
+        self.graph_builder.add_edge("content_creator", END)
     
     
-    def setup_graph(self, usecase: str):
+    def setup_graph(self, usecase: str, link):
         """
         Sets up the graph for the selected use case.
         """
+
+
+
         if usecase == "Basic Chatbot":
+            logging.debug("Basic Chatbot branch executed")
             self.basic_chatbot_build_graph()
 
         if usecase == "Chatbot with Tool":
             self.chatbot_with_tools_build_graph()
+        
+        if usecase == "Blog from YT VIdeo":
+            self.yt_link = link
+            self.blog_from_YT_build_graph()
+      
         return self.graph_builder.compile()
     
 

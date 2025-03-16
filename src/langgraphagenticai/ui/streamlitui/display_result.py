@@ -1,6 +1,7 @@
 import streamlit as st
 from langchain_core.messages import HumanMessage,AIMessage,ToolMessage
 import json
+import logging
 
 
 class DisplayResultStreamlit:
@@ -39,4 +40,12 @@ class DisplayResultStreamlit:
                 elif type(message)==AIMessage and message.content:
                     with st.chat_message("assistant"):
                         st.write(message.content)
+
+        elif usecase=="Blog from YT VIdeo":
+            result = graph.invoke({"link":"1q123"})
+
+
+            with st.chat_message("user"):
+                st.title(f"{result["title"].content}")
+                st.write(f"{result["content"].content}")
              

@@ -1,9 +1,17 @@
 import streamlit as st
 import json
+import logging
 from src.langgraphagenticai.ui.streamlitui.loadui import LoadStreamlitUI
 from src.langgraphagenticai.LLMS.groqllm import GroqLLM
 from src.langgraphagenticai.graph.graph_builder import GraphBuilder
 from src.langgraphagenticai.ui.streamlitui.display_result import DisplayResultStreamlit
+
+
+logging.basicConfig(
+    level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Customize the output format
+    datefmt='%Y-%m-%d %H:%M:%S'  # Date and time format
+)
 
 # MAIN Function START
 def load_langgraph_agenticai_app():
@@ -25,6 +33,8 @@ def load_langgraph_agenticai_app():
     # Text input for user message
     if st.session_state.IsFetchButtonClicked:
         user_message = st.session_state.timeframe 
+    if user_input.get('selected_usecase') == "Blog from YT VIdeo":
+        user_message = st.button("generate blog")
     else :
         user_message = st.chat_input("Enter your message:")
 
@@ -46,9 +56,14 @@ def load_langgraph_agenticai_app():
                 
 
                 ### Graph Builder
-                graph_builder=GraphBuilder(model)
+                graph_builder=GraphBuilder(model,usecase)
                 try:
-                    graph = graph_builder.setup_graph(usecase)
+                    if usecase == "Blog from YT VIdeo":
+                        link = user_input.get('YT_link')
+                        graph = graph_builder.setup_graph(usecase,link)
+                    else:
+                        
+                        graph = graph_builder.setup_graph(usecase,"")
                     DisplayResultStreamlit(usecase,graph,user_message).display_result_on_ui()
                 except Exception as e:
                     st.error(f"Error: Graph setup failed - {e}")
