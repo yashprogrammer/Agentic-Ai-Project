@@ -56,7 +56,7 @@ class BlogFromYTNode:
         """
 
         try:
-            content = self.llm.invoke(f"generate a blog content based on the following transcrpit : {state["transcript"]} and title : {state["title"]}, Output ONLY the content not even title, without any explanation or additional text")
+            content = self.llm.invoke(f"generate a blog content based on the following transcrpit : {state['transcript']} and title : {state['title']}, Output ONLY the content not even title, without any explanation or additional text")
             return{"content": content}
         except Exception as e:
             return {"error": str(e)}    
