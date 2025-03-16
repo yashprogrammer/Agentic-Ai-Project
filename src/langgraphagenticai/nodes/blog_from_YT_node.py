@@ -44,7 +44,7 @@ class BlogFromYTNode:
         """
 
         try:
-            title = self.llm.invoke(f"generate a Single SEO Friendly Title based on the following transcrpit : {state["transcript"]}, Output ONLY the title, without any explanation or additional text")
+            title = self.llm.invoke(f"generate a Single SEO Friendly Title based on the following transcrpit : {state['transcript']}, Output ONLY the title, without any explanation or additional text")
 
             return{"title" : title}
         except Exception as e:
@@ -59,4 +59,4 @@ class BlogFromYTNode:
             content = self.llm.invoke(f"generate a blog content based on the following transcrpit : {state["transcript"]} and title : {state["title"]}, Output ONLY the content not even title, without any explanation or additional text")
             return{"content": content}
         except Exception as e:
-            return {"error": str(e)}
+            return {"error": str(e)}    
